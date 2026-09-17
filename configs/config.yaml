@@ -1,0 +1,15 @@
+image_size: 128
+
+batch_size: 32
+
+epochs: 10
+
+learning_rate: 0.001
+
+num_classes: 2
+
+class_names:
+  - cat
+  - dog
+
+model_path: models/dog_cat_cnn.pth

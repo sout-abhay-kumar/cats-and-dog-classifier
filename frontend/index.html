@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Dog vs Cat Classifier
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+<body>
+
+    <main class="container">
+
+        <h1>
+            🐶 Dog vs Cat 🐱
+        </h1>
+
+        <p>
+            Upload an image and let my CNN
+            classify it.
+        </p>
+
+        <input
+            type="file"
+            id="imageInput"
+            accept="image/*"
+        >
+
+        <div class="preview-container">
+
+            <img
+                id="preview"
+                alt="Image Preview"
+            >
+
+        </div>
+
+        <button id="predictButton">
+            Predict
+        </button>
+
+        <div
+            id="result"
+            class="result"
+        ></div>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
