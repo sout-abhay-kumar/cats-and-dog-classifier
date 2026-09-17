@@ -14,6 +14,9 @@ from fastapi import (
 
 from fastapi.middleware.cors import CORSMiddleware
 
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+
 from torchvision import transforms
 
 
@@ -35,18 +38,38 @@ app = FastAPI(
 )
 
 
+# --------------------------------
+# Frontend
+# --------------------------------
+
+frontend_path = os.path.join(
+    PROJECT_ROOT,
+    "frontend"
+)
+
+app.mount(
+    "/static",
+    StaticFiles(directory=frontend_path),
+    name="static"
+)
+
+
+# --------------------------------
+# CORS
+# --------------------------------
+
 app.add_middleware(
     CORSMiddleware,
-
     allow_origins=["*"],
-
     allow_credentials=True,
-
     allow_methods=["*"],
-
     allow_headers=["*"]
 )
 
+
+# --------------------------------
+# Device
+# --------------------------------
 
 device = torch.device(
     "cuda"
@@ -54,6 +77,10 @@ device = torch.device(
     else "cpu"
 )
 
+
+# --------------------------------
+# Model
+# --------------------------------
 
 model_path = os.path.join(
     PROJECT_ROOT,
@@ -76,6 +103,10 @@ model.to(device)
 model.eval()
 
 
+# --------------------------------
+# Image Transform
+# --------------------------------
+
 transform = transforms.Compose([
     transforms.Resize(
         (128, 128)
@@ -84,14 +115,24 @@ transform = transforms.Compose([
 ])
 
 
+# --------------------------------
+# Homepage
+# --------------------------------
+
 @app.get("/")
 def home():
 
-    return {
-        "message":
-        "Dog vs Cat Classifier API is running"
-    }
+    return FileResponse(
+        os.path.join(
+            frontend_path,
+            "index.html"
+        )
+    )
 
+
+# --------------------------------
+# Prediction
+# --------------------------------
 
 @app.post("/predict")
 async def predict(
@@ -110,6 +151,7 @@ async def predict(
 
     image = image.to(device)
 
+
     with torch.no_grad():
 
         output = model(image)
@@ -124,17 +166,21 @@ async def predict(
             dim=1
         ).item()
 
+
     classes = [
         "cat",
         "dog"
     ]
 
+
     predicted_class = classes[prediction]
+
 
     confidence = probabilities[
         0,
         prediction
     ].item()
+
 
     return {
         "prediction": predicted_class,
