@@ -40,7 +40,7 @@ predictButton.addEventListener("click", async () => {
   result.innerText = "🔍 Predicting...";
 
   try {
-    const response = await fetch("/predict", {
+    const response = await fetch("https://cats-and-dog-classifier.onrender.com/predict", {
       method: "POST",
       body: formData,
     });
